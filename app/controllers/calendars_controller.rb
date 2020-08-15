@@ -15,7 +15,7 @@ class CalendarsController < ApplicationController
   private
 
   def plan_params
-    params.require(:calendars).permit(:date, :plan)
+    params.require(:plan).permit(:date, :plan)
   end
 
   def get_week
@@ -30,13 +30,15 @@ class CalendarsController < ApplicationController
     @plans = Plan.where(date: @todays_date..@todays_date + 7)
 
     7.times do |x|
+      day = @todays_date + x
       plans = []
       plan = @plans.map do |plan|
-        plans.push(plan.plan) if plan.date == @todays_date + x
+        plans.push(plan.plan) if plan.date == day
       end
-      days = { month: (@todays_date + x).month, date: (@todays_date+x).day, plans: plans}
+      days = { month: (day).month, date: (day).day, wday:  wdays[(day).wday] ,plans: plans}
       @week_days.push(days)
     end
-
   end
 end
+
+# .strftime(’%w’）
